@@ -23,6 +23,7 @@ def rerank(query, retrievals, n):
   """Reranks the retrieved documents based on the given query."""
   
   # Call the cohere rerank function with the provided parameters
+  # Once the initial set of documents is retrieved, the Cohere Rerank model comes into play. The model evaluates each document in the context of the query and assigns a relevance score to each document. This scoring is based on semantic understanding rather than just keyword matching.
   return co.rerank(
     query = query,          # The search query
     documents = retrievals, # The list of retrieved documents to be reranked
