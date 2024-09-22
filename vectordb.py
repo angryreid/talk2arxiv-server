@@ -68,21 +68,22 @@ def retrieve_context(query, paper_id):
 
   query_vector = embed_query(query)[0]
   
-  retrieved_docs = qdrant_client.search(
-    collection_name="talk2arxiv",
-    limit=N,
-    query_filter=models.Filter(
-        must=[
-            models.FieldCondition(
-                key="paper_id",
-                match=models.MatchValue(
-                    value=paper_id,
+  # Perform a search on the Qdrant client
+retrieved_docs = qdrant_client.search(
+    collection_name="talk2arxiv",  # Specify the collection to search in
+    limit=N,                       # Limit the number of results to N
+    query_filter=models.Filter(    # Apply a filter to the search query
+        must=[                     # Conditions that must be met
+            models.FieldCondition( # Define a condition on a specific field
+                key="paper_id",    # The field to apply the condition on
+                match=models.MatchValue( # Match a specific value
+                    value=paper_id, # The value to match (paper_id)
                 ),
             )
         ]
     ),
-    query_vector=query_vector
-  )
+    query_vector=query_vector      # The query vector for similarity search
+)
 
   texts = [str(doc.payload['embedded_text']) + ":\n" + str(doc.payload['chunk']) for doc in retrieved_docs]
   paper_title = retrieved_docs[0].payload.get('paper_title', "")
